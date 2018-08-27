@@ -1,0 +1,374 @@
+https://www.severcart.org/blog/all/essential-python-interview-questions/
+
+# Python 
+  - интерпретируемый язык программирования (не требует компиляции перед запуском)
+  - динамически типизируемый (одна переменная может ссылаться на разные типы)
+  - memory management
+  - ООП
+  - не многопоточен реально, GIL - имитатор многопоточности, но выполняется на одном ядре
+  - все - это объекты (в т.ч. функции, модули, типы и остальное)
+
+
+# Медленный:
+  - GIL
+  - интерпретируемый, а не компилируемый
+  - динамическая типизация
+  
+  
+# Типы
+  - None - класс-синглтон
+  - bool, int, float, complex
+  - str
+    - байтовые  - элемент строки - байт              b'foo'
+    - юникодные - элемент строки - юникод символ     'foo'
+    - неизменяемые - на каждую конкатенацию создается новая строка
+  - bytes
+  - список - [] или list(),  изменяемый тип
+  - кортеж - () или tuple(), неизменяемый тип
+  - множество - set(),       изменяемый тип
+  - словарь - {} или dict(), изменяемый тип
+      ключами могут быть хешируемые, неизменяемые типы
+  
+
+# is - сравнение по ссылке
+  x = [1, 2]
+  y = 3
+  x is x      # True
+  x is y      # False
+  x is [1, 2] # False
+  
+  
+# *args, **kwargs
+  *args - когда неизвестно точное количество передаваемых аргументов в функцию, 
+          или если нужно передать аргументы сохранив их в виде списка или кортежа:
+  **kwargs - когда неизвестно, сколько ключевых слов аргументов будет передано функции, 
+             или он может быть использован для передачи значений словаря в качестве ключевых аргументов
+
+
+# Значения аргумента по умолчанию в функции инициализируется один раз
+
+def f(x, y=[])   # y=[] - будет один массив на все вызовы
+
+Если надо инициализировать значение по умолчанию для изменяемого типа, то делаем None
+
+def f(x, y=None):
+    y = y or []       # если y должен быть изменяемым
+    y = list(y or []) # если нет
+
+
+# Декораторы 
+    - особый вид функций, которая либо принимает функцию и возвращает функцию или принимает класс и возвращает класс
+    
+   @my_decorator
+   def my_func(stuff):
+       do_things     
+
+   эквивалентно:
+    
+   def my_func(stuff):
+       do_things
+
+   my_func = my_decorator(my_func)
+
+
+  - @classmethod, @staticmethod - похожи, но в classmethod первым аргументом передается тип класса
+  - @property - обычное свойство -getter, для setter нужно задать @property_name.setter
+
+
+# GC
+
+  - Python отслеживает количество ссылок на каждый объект в памяти. 
+    Если счетчик ссылок равен нулю, то соответствующий объект удаляется из памяти, 
+    освобождённая память может быть использована повторно. Cсылочные циклы тоже удаляются, но реже
+    
+  - Поколения - каждый объект получает одно поколение, младшие поколения рассматриваются в первую очередь
+  
+  
+# Итераторы и генераторы - объекты-перечислители
+
+  - Итератор можно получить из любой коллекции через iter(some_collection) (Итератор уже сидит в коллекциях, iter() просто возвращает его)
+  - Кастомный итератор:
+      - это класс с методом  __next__(self)
+      - если хотим использовать в цикле for, то нужен еще метод 
+      
+          def __iter__(self):
+              return self
+  
+  - генераторы - функции, которые упрощают конструирование итераторов. 
+                 Не надо деалть класс, достаточно функции с yield внутри
+  
+# Модуль = файл, например hello.py
+  import hello
+  
+  dir(hello) - что есть в модуле
+  
+  
+# Строки
+  - множественная конкатенация - через join 
+     ','.join(['a', 'b', 'c'])  # 'a, b, c'
+    иначе - создание большого количества строк из-за их неизменяемости
+    Другой способ - io.StringIO() - строковый файл в памяти
+
+
+# Кортеж - неизменяемая коллекция. Семантика - row с разнотипными данными
+  - (42,), ('s', 12, 45)
+  - можно конкатенировать через +
+  - именованный кортеж - namedtuple (фабрика легковесных классов)
+
+# Список - изменяемая коллекция - могут быть разнотипные элементы, но семантически списки для однотипных элементов
+  - можно конкатенировать через +
+  - размножение: 
+     [0]*2 = [0, 0]
+     [[0]]*2 = [[0][0]]  # внутри одинаковые по ссылке [0] объекты!!! x[0][0] = 42  -> [[42][42]]
+                         # надо [[0] for i in [1,2]]
+  - перезапись куска списка:
+     xs = [1, 2, 3]
+     xs[1:] = [0]*2   # [1, 0, 0]
+  - del - удалить элемент или целый слайс
+  - сложные сортировки
+     x = [3, 2, 1]
+     xs.sort(key=lambda x: x%2, reverse=True) # xs = [3, 1, 2]
+     # или sorted(xs)
+  - список можно использовать как стек и как очередь
+    stack = []
+    stack.append(1)
+    stack.append(2)
+    stack.pop()
+    
+    queue = []
+    queue.append(1)
+    queue.append(2)
+    queue.pop(0)
+    
+# Двусторонняя очередь:
+  from collections import deque 
+
+  
+# Множество
+  - my_set.update([1, 2, 5]) - Добавить
+  
+  
+# Словарь
+  - d = dict.fromkeys(['a', 'v'])   # { 'a': None, 'v': None }
+  - d = dict(other)  # shallow копия
+  - модифицировать словарь при итерации нельзя. Если хочется - недо оборачивать ключи в другую коллекцию и итерироваться по ней
+  - defaultdict 
+  - OrderedDict  - запоминается порядок добавления ключей по времени
+
+
+# Counter - словарь-счетчик. Можно складывать
+
+
+# Переменные и области видимости
+#   - внимание!!!
+
+x = 1
+def f():
+    #x = 3
+    y = x
+    #x = 2
+    return x + y
+print(x)
+print(f())
+print(x)
+
+# 1 2 1
+# После раскоментирования строчки x = 2 будет ошибка UnboundLocalError
+# После раскоментирования строчки x = 3 будет  1 6 1
+
+
+# Классы
+  - __init__(self, ...) - конструктор
+  - моля можно создавать динамически:
+      a = A()
+      a.new_field = 12
+    но лучше так не делать, а все объявлять в конструкторе
+
+  - классовые и экземплярные переменные:
+  
+    class A():
+    x = 2
+    
+    def __init__(self):
+        self.x = 3
+        
+    a = A()
+    A.x     # 2
+    a.x     # 3
+    
+  - Все переменные экземпляра/класса хранятся в их __dict__ словаре.
+    Можно делать классы с фиксированной структурой:
+      
+      class Point:
+          __slots__ = ["x", "y"]
+          
+    у него будут только поля x и у и больши никаких других
+    p = Point()
+    p.z = 4 - ошибка
+    
+    Лучше использовать namedtuple
+    
+  - Свойства:
+  
+    @property
+    def height(self):
+        return self._height
+    
+    @height.setter
+    def height(self, value):
+        self._height = value
+        
+    @height.deleter # - для очистки коллекций и т.п.
+    
+  - Наследование
+    - поиск имен атрибутов ищется сначала в __dict__ экземпляра, затем в классе, затем вверх по иерархии наследования
+    
+    - super() - для вызова базового класса
+    
+    - множествнное наследование:  A.mro() - порядок разрешения перегрузок
+    
+
+# Исключения
+  - BaseException - базовый класс для всех исключений, но надо наследовать от Exception
+  - MemoryError (слишком большой объект), ImportError (ошибка импорта модуля), TypeError (конкатенация списка и числа)
+   
+  try:
+      # do smth
+  except (TypeError, MemoryError):
+      # errir handling
+  finally:
+      # release resources
+      
+      
+# Менеджеры контекста (` IDisposable)
+  - with ... 
+  - наследоваться не надо, просто реализовать __enter__ и __exit__ методы
+
+ 
+# Итераторы
+  - это класс, который реализует два метода
+    __iter__(достаточно для коллекций), __next__
+    
+# Генераторы
+  - это функция с yield внутри
+  - можно использовать для компактной реализации __iter__ у итераторов
+  
+  
+# Модули и пакеты
+
+Модуль - файл .py на диске
+
+import useful    # исполняет модуль сверху вниз
+
+Пакет - папка с __init__.py внутри
+
+from . import something        # для импорта из текущего пакета
+from .. import something_else  # для импорта из пакета на уровень выше
+
+
+в __init__ обычно заполняется __all__ для импорта звездочкой *
+
+
+# Тестирование
+
+- doctest - тесткейс описывается в теле документации к функции после >>>, очень простое решение
+
+- assert  - помещаем ассерты внутри тестовых функций
+
+- unittest - модуль для юниттестирования, позволяет объединять тесты в группы, настраивать и автоматизировать их.
+             Наследуемся от TestCase и получаем кучу assert-методов,
+             сами методы тестов должны начинаться с test__,
+             setUp(), tesrDown() - ...
+             
+             в классе:
+               if __name__ = '__main__':
+                   unittest.main()
+
+- py.test - альтернатива unittest.
+
+# GIL
+Концепция GIL заключается в том, что в каждый момент времени только один поток может исполняться процессором. Это сделано для того, чтобы между потоками не было борьбы за отдельные переменные. Исполняемый поток получает доступ ко всему окружению. Такая особенность реализации потоков в Python значительно упрощает работу с потоками и дает определенную потокобезопасность (thread safety).
+
+
+# __new__ и __init__
+  __new__  - создает и возвращает инстанцию объекта
+  __init__ - инстанция уже создана, передается как self, метод ее инициализирует
+
+  
+# Чтобы объект был хешируем, у него должны быть методы __hash__, __eq__ и (опционально) __ne__
+
+
+# How is memory managed in Python?
+
+Python memory is managed by Python private heap space. 
+All Python objects and data structures are located in a private heap.
+GC
+
+
+# dir(), help()
+dir  - список defined symbols
+help - строка документации
+
+
+# How can you randomize the items of a list in place in Python?
+
+from random import shuffle
+x = ['Keep', 'The', 'Blue', 'Flag', 'Flying', 'High']
+shuffle(x)
+
+
+# What is the difference between range & xrange?
+
+range   --> static list in-memory, 
+xrange  --> xrange object, an iterator
+
+
+# What is pickling and unpickling?
+
+Pickle module accepts any Python object and converts it into a string representation and dumps it into a file by using dump function, this process is called pickling. While the process of retrieving original Python objects from the stored string representation is called unpickling.
+
+
+# How to get indices of N maximum values in a NumPy array?
+
+arr = np.array([1, 3, 2, 4, 5])
+arr.argsort()[-3:][::-1]
+
+
+# How do you calculate percentiles with Python/ NumPy?
+
+a = np.array([1,2,3,4,5])
+p = np.percentile(a, 50)  #Returns 50th percentile, e.g. median
+
+
+# What is PEP 8
+
+Это руководство по написанию кода на Python
+
+
+# static analysis
+
+PyChecker, Pylint - code style etc.
+
+
+# How can you share global variables across modules?
+
+To share global variables across modules within a single program, create a special module. Import the config module in all modules of your application. The module will be available as a global variable across modules.
+
+
+# Explain how can you make a Python Script executable on Unix?
+
+To make a Python Script executable on Unix, you need to do two things:
+- Script file's mode must be executable 
+- the first line must begin with # ( #!/usr/local/bin/python)
+
+
+
+
+
+
+
+https://proglib.io/p/python-interview/
+https://thenno.me/blog/python-interview.html
+https://www.guru99.com/python-interview-questions-answers.html
+https://www.tutorialspoint.com/python/python_interview_questions.htm
+

@@ -1,0 +1,45 @@
+Machine Learning
+http://machinelearning.ru/wiki/index.php?title=%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_%28%D0%BA%D1%83%D1%80%D1%81_%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D0%B9%2C_%D0%9A.%D0%92.%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D1%86%D0%BE%D0%B2%29
+https://www.youtube.com/watch?v=4BKQ3GZR32w&list=PLJOzdkh8T5kp99tGTEFjH_b9zqEQiiBtC&index=4
+https://habrahabr.ru/company/yandex/blog/208034/
+
+http://machinelearning.ru/wiki/images/6/6d/Voron-ML-1.pdf
+http://machinelearning.ru/wiki/images/3/3e/Voron-ML-Logic.pdf
+http://machinelearning.ru/wiki/index.php?title=%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_%28%D0%BA%D1%83%D1%80%D1%81_%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D0%B9%2C_%D0%9A.%D0%92.%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D1%86%D0%BE%D0%B2%29#.D0.9E.D1.81.D0.BD.D0.BE.D0.B2.D0.BD.D1.8B.D0.B5_.D0.BF.D0.BE.D0.BD.D1.8F.D1.82.D0.B8.D1.8F_.D0.B8_.D0.BF.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B_.D0.BF.D1.80.D0.B8.D0.BA.D0.BB.D0.B0.D0.B4.D0.BD.D1.8B.D1.85_.D0.B7.D0.B0.D0.B4.D0.B0.D1.87
+
+Neyron Networks
+http://logic.pdmi.ras.ru/~sergey/teaching/ml
+
+https://deeplearning4j.org/generative-adversarial-network
+
+https://compscicenter.ru/courses/python/2015-autumn/ - PYTHON ADVANCED
+https://habrahabr.ru/company/ods/blog/344044/  - ML ADVANCED
+
+
+https://github.com/esokolov  - полезная информация/курсы по ML от Е.Соколова.
+                               полезные материалы в pdf
+
+                               
+                               
+http://ronny.rest/tutorials/module/tf_01  - TF
+
+
+https://alexanderdyakonov.wordpress.com - блог А.Дьяконова. Хорошо об ML
+
+https://compscicenter.ru/courses/python/2015-autumn/classes/ - лекции по питону. Хорошие
+
+https://habr.com/post/337028/ - байесовская школа
+
+https://habr.com/company/nixsolutions/blog/417935/  - памятки по ML
+https://proglib.io/p/deep-learning-tricks/ - хорошие советы по DeepLearning
+
+
+https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/multi_layer_perceptron_mnist.html - хороший блог/книга по ML и DL
+
+
+Инсталляция XGBoost на Windows
+У меня в итоге получилось через pip install xgboost (в anaconda prompt), но тут тоже вроде дело говорят
+https://medium.com/@rakshithvasudev/how-i-installed-xgboost-after-a-lot-of-hassels-on-my-windows-machine-c53e972e801e
+
+
+https://proglib.io/p/python-data-science/  - pandas, основные функции 
