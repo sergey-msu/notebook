@@ -1,0 +1,66 @@
+# list subdirs and file in current dir
+
+ls
+
+
+# list subdirs and file in current dir with their info: permissions etc.
+
+ls -l
+
+
+# List all elements in current directory + hidden
+
+ls - a
+
+
+# change directory
+
+cd sub_folder
+
+
+# directory up
+
+cd ..
+
+
+# directory root
+
+cd ~
+
+
+# Current directory
+
+pwd
+
+
+# Clear bash window
+
+clear
+
+
+# Make new subdirectory in current directory
+
+mkdir new_dir
+
+
+# Run python script in current directory
+
+./hello.py
+
+
+# Find file with 'hel' in name (may updatedb command execution be needed)
+
+locate hel
+
+
+# Print command history
+
+history
+
+
+# Createfile / update file's date
+
+touch file1 file2
+
+
+

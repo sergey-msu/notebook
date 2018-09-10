@@ -1,0 +1,16 @@
+# What is Hadoop?
+
+Hadoop is a framework for writing and running distributed applications that process large amounts of data.
+
+
+# What is Map/Reduce
+
+MapReduce programs are executed in two main phases, called mapping and reducing^:
+
+1. In the mapping phase, MapReduce takes the input data and feeds each data element to the mapper. 
+2. In the reducing phase, the reducer processes all the outputs from the mapper and arrives at a final result.
+
+i.e Mapper = filter + transformer, Reducer = aggregator
+
+
+

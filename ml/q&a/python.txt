@@ -357,9 +357,10 @@ To share global variables across modules within a single program, create a speci
 
 # Explain how can you make a Python Script executable on Unix?
 
-To make a Python Script executable on Unix, you need to do two things:
-- Script file's mode must be executable 
-- the first line must begin with # ( #!/usr/local/bin/python)
+To make a Python Script executable on Unix, you need to do the following things:
+- Make sure the first line of your file has #!/usr/bin/env python .
+- Make it executable - chmod +x <filename>.py .
+- And run it as ./<filename>.py
 
 
 

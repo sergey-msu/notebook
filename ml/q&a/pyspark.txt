@@ -1,0 +1,165 @@
+# What is it?
+
+Apache Spark is an open-source powerful distributed querying and
+processing engine
+
+
+# Execution process
+
+Sigle Drive process : job1, job2,...    1-->*  Workers : task1, task2, ...
+
+
+# Resilient Distributed Dataset
+
+- RDDs is a collection of an immutable Java Virtual Machine (JVM)
+- Python data is stored within these JVM objects
+- operate in parallel
+- they are schema-less data structures
+
+
+# RDD operations
+  
+  1. transformations:
+     - mapping, filtering, joining, transcoding
+     - returns pointer to other RDD
+     - lazy
+     - executed in parallel
+     - .collect() - executes queary and returns the result back to driver
+     - defining pure Python methods can slow down your application. 
+       Whenever you can, you should use built-in Spark functions.
+
+  
+  2. actions:
+     - return values after running some computations
+  
+  
+# DataFrames
+
+They are immutable collections of data distributed among the nodes in a cluster. 
+However, unlike RDDs, in DataFrames data is organized into named columns
+
+
+# Create RDD
+  
+  1. sc.parallelize(...some list...)
+  2. sc.textFile('path_to_file')
+
+  - sc.textFile(..., n) specifies the number of partitions the dataset is divided into.
+  
+  
+# Global vs Local scope
+
+Spark can be run in two modes: Local and cluster.
+In the cluster mode, when a job is submitted for execution, the job is sent to the driver (or a master) node. 
+The driver node creates a DAG (see Chapter 1, Understanding Spark) for a job and decides which
+executor (or worker) nodes will run specific tasks. Before that happens, however, the
+driver prepares each task's closure: A set of variables and methods
+present on the driver for the worker to execute its task on the RDD
+  
+
+# Transformations:
+  - map() 
+    Applies to all rows in RDD
+
+  - filter()  
+    Filters out rows by specified criteria
+
+  - flatMap() 
+    Work similarly like map() but rerutns flattened result
+
+  - distinct() 
+    Returns distinct rows
+
+  - sample() 
+
+    The .sample(...) method returns a randomized sample from the dataset. 
+    The first parameter specifies whether the sampling should be with a replacement, 
+    the second parameter defines the fraction of the data to return,
+    and the third is seed to the pseudo-random numbers generator
+
+  - leftOuterJoin() and join()
+
+    cs = psp.SparkContext.getOrCreate()
+    d1 = cs.parallelize([('a', 1), ('b', 2), ('c', 3)])
+    d2 = cs.parallelize([('a', 1), ('b', 3), ('a', 4), ('d', 2)])
+    d = d1.leftOuterJoin(d2)   # [('b', (2, 3)), ('c', (3, None)), ('a', (1, 1)), ('a', (1, 4))]
+    d = d1.join(d2)            # [('b', (2, 3)), ('a', (1, 1)), ('a', (1, 4))]
+
+  - repartition() 
+
+    Repartitioning the dataset changes the number of partitions that the dataset is divided into
+
+    rdd1 = rdd1.repartition(4)
+    len(rdd1.glom().collect())
+    
+    The .glom() method, in contrast to .collect(), produces a list where
+    each element is another list of all elements of the dataset present in a
+    specified partition; the main list returned has as many elements as the
+    number of partitions
+
+
+# Actions:
+
+  Execute the scheduled task on the dataset
+
+  - take(10)         - returns top 10 items
+  - takeSample()     - returns randomized sample
+  - collect( )       - returns all element to RDD driver
+  - reduce()         - reduces items of RDD using specified method
+  - reduceByKey()    - reduces kvp grouped by first (key) value
+  - count()          - total number of elements of RDD
+  - countByKey()     - count within each key if the data stored as kvp
+  - saveAsTextFile() - ...
+  - foreach          - applies some function to each row
+
+
+# Catalyst optimizer
+
+It is a query optimizer just like one in SQL RDBMS
+  
+
+# DataFrames
+
+It is an immutable distributed collection organized into named columns.
+Create:
+
+spark = psp.sql.SparkSession.builder.appName('test-app').getOrCreate()
+with spark:
+    sc = psp.SparkContext.getOrCreate()
+    d = sc.parallelize([(123, 'Katie',   19, 'brown'),
+                        (234, 'Michael', 22, 'green'),
+                        (345, 'Simone',  23, 'blue')])
+    df = spark.createDataFrame(d, schema=['id', 'name', 'age', 'eye_color'])
+    print(df.printSchema())
+    print(df.show())
+
+
+# Apply query to DataFrame via SQL
+
+    # way 1
+    print(df.select('id', 'age').filter('age > 20').show())
+
+    # way 2
+    print(df.select(df.id, df.age).filter(df.age > 20).show())
+
+
+# Apply query to DataFrame via SQL API
+
+    df.createOrReplaceTempView('testJson')
+    res = spark.sql('select * from testJson where age>20').show()
+
+
+# RDD to DataFrame
+
+  1. infer schema via reflection
+  2. programmatically specify the schema
+  
+  
+  
+  
+  
+
+
+
+
+
