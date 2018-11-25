@@ -1,0 +1,351 @@
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types._
+import scala.collection.mutable.WrappedArray
+
+
+def getInputSchema(): StructType = {
+    StructType(
+        StructField("date", DateType) :: 
+        StructField("cnt_bank_complete", IntegerType) ::
+        StructField("cnt_item_resource_received", IntegerType) ::
+        StructField("cnt_item_resource_spent", IntegerType) ::
+        StructField("usd_spent", FloatType) ::
+        StructField("num_resource_received_itemuse", LongType) ::
+        StructField("num_resource_received_supportmarch", LongType) ::
+        StructField("num_resource_received_mergemarch", LongType) ::
+        StructField("num_resource_spent_march", LongType) ::
+        StructField("num_resource_spent_defence", LongType) ::
+        StructField("num_resource_spent_supportmarch", LongType) ::
+        StructField("num_resource_spent_trainstart", LongType) ::
+        StructField("num_resource_spent_constructstart", LongType) ::
+        StructField("num_resource_spent_explorestart", LongType) ::
+        StructField("cnt_battle_won_attack_attacker_city", IntegerType) ::
+        StructField("cnt_battle_won_attack_defender_city", IntegerType) ::
+        StructField("cnt_battle_lost_attack_attacker_city", IntegerType) ::
+        StructField("cnt_battle_lost_attack_defender_city", IntegerType) ::
+        StructField("num_unit_spent", IntegerType) ::
+        StructField("num_monsterkill", IntegerType) ::
+        StructField("cnt_research_resources", IntegerType) ::
+        StructField("t", IntegerType) ::
+        StructField("teleport", IntegerType) ::
+        StructField("buy", IntegerType) ::
+        StructField("refund", IntegerType) :: Nil)
+}
+
+def getIntermediateSchema(): StructType = {
+    StructType(
+        StructField("date_values_tuple", ArrayType(
+            StructType(
+                StructField("timestamp", LongType) :: 
+                StructField("cnt_bank_complete", IntegerType) ::
+                StructField("cnt_item_resource_received", IntegerType) ::
+                StructField("cnt_item_resource_spent", IntegerType) ::
+                StructField("usd_spent", FloatType) ::
+                StructField("num_resource_received_itemuse", LongType) ::
+                StructField("num_resource_received_supportmarch", LongType) ::
+                StructField("num_resource_received_mergemarch", LongType) ::
+                StructField("num_resource_spent_march", LongType) ::
+                StructField("num_resource_spent_defence", LongType) ::
+                StructField("num_resource_spent_supportmarch", LongType) ::
+                StructField("num_resource_spent_trainstart", LongType) ::
+                StructField("num_resource_spent_constructstart", LongType) ::
+                StructField("num_resource_spent_explorestart", LongType) ::
+                StructField("cnt_battle_won_attack_attacker_city", IntegerType) ::
+                StructField("cnt_battle_won_attack_defender_city", IntegerType) ::
+                StructField("cnt_battle_lost_attack_attacker_city", IntegerType) ::
+                StructField("cnt_battle_lost_attack_defender_city", IntegerType) ::
+                StructField("num_unit_spent", IntegerType) ::
+                StructField("num_monsterkill", IntegerType) ::
+                StructField("cnt_research_resources", IntegerType) ::
+                StructField("t", IntegerType) ::
+                StructField("teleport", IntegerType) ::
+                StructField("buy", IntegerType) ::
+                StructField("refund", IntegerType) :: Nil))))
+}
+
+def getOutputSchema(): StructType = {
+    StructType(
+        StructField("res_received", LongType) :: 
+        StructField("res_waste_frac", FloatType) :: 
+        StructField("res_spent_frac", FloatType) :: 
+        StructField("teleport", IntegerType) :: 
+        StructField("attacks", IntegerType) :: 
+        StructField("attack_winrate", FloatType) :: 
+        StructField("defends", IntegerType) :: 
+        StructField("defend_winrate", FloatType) :: 
+        StructField("farm_days", IntegerType) :: 
+        StructField("wait_days", IntegerType) :: 
+        StructField("waste_days", IntegerType) :: 
+        StructField("item_res_received", IntegerType) :: 
+        StructField("item_res_spent", IntegerType) :: 
+        StructField("research_res", IntegerType) :: 
+        StructField("unit_spent", IntegerType) :: 
+        StructField("monsterkill", IntegerType) :: 
+        StructField("buy", IntegerType) :: 
+        StructField("refund_frac", FloatType) :: 
+        StructField("usd_spent", FloatType) :: 
+        StructField("buy_all", IntegerType) :: 
+        StructField("refund_all_frac", FloatType) :: 
+        StructField("usd_spent_all", FloatType) :: Nil)
+}
+
+---------------------------------------------------
+
+import org.apache.spark.sql.expressions.{UserDefinedAggregateFunction, MutableAggregationBuffer}
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types._
+import scala.collection.mutable.{WrappedArray, ListBuffer, ArrayBuffer}
+
+
+class FeatureAggregateFunction extends UserDefinedAggregateFunction {
+    
+    // Input fields schema
+    override def inputSchema: StructType = getInputSchema()
+    
+    // Buffer schema for computing aggregate
+    override def bufferSchema: StructType = getIntermediateSchema()
+
+    // Output fields schema
+    override def dataType: DataType = //getOutputSchema()
+        StructType( 
+            StructField("res_received", LongType) :: 
+            StructField("res_waste_frac", FloatType) :: 
+            StructField("res_spent_frac", FloatType) :: 
+            StructField("teleport", IntType) ::
+            StructField("defends", IntType) :: 
+            StructField("defend_winrate", FloatType) :: 
+            StructField("monsterkill", IntType) :: Nil)
+    
+    override def deterministic: Boolean = true
+    
+    // Buffer initialization
+    override def initialize(buffer: MutableAggregationBuffer): Unit = {
+        buffer(0) = new ListBuffer[Array[Long]]
+    }
+
+    // Buffer update with every row in a group
+    override def update(buffer: MutableAggregationBuffer, row: Row): Unit = {
+        val tmp = new ListBuffer[Array[Long]]
+        tmp ++= buffer.getAs[List[Array[Long]]](0)
+        tmp += Array[Long](
+                row.getDate(0).getTime,
+                row.getInt(1).toLong, row.getInt(2).toLong, row.getInt(3).toLong,
+                (100*row.getFloat(4)).toLong,
+                row.getLong(5),  row.getLong(6),  row.getLong(7),
+                row.getLong(8),  row.getLong(9),  row.getLong(10),
+                row.getLong(11), row.getLong(12), row.getLong(13),
+                row.getInt(14).toLong, row.getInt(15).toLong, row.getInt(16).toLong, row.getInt(17).toLong, 
+                row.getInt(18).toLong, row.getInt(19).toLong, row.getInt(20).toLong,
+                row.getInt(21).toLong, row.getInt(18).toLong, row.getInt(19).toLong, row.getInt(20).toLong)
+        
+        buffer(0) = tmp
+    }
+
+    // Buffers merge
+    override def merge(buffer1: MutableAggregationBuffer, buffer2: Row): Unit = {
+        val tmp = new ListBuffer[Array[Long]]
+        tmp ++= buffer1.getAs[List[Array[Long]]](0)
+        tmp ++= buffer2.getAs[List[Array[Long]]](0)
+        buffer1(0) = tmp
+    }
+    
+    // Evaluate final value
+    override def evaluate(buffer: Row) = {
+        var rows = new ListBuffer[Array[Long]]
+        rows ++= buffer.getAs[List[Array[Long]]](0)
+        rows = rows.sortBy(r => r(0))
+        
+        var tm: Long = 0
+        var sum_res_received: Long = 0
+        var sum_res_waste: Long = 0
+        var sum_res_spent: Long = 0
+        var sum_won_defends: Long = 0
+        var sum_lost_defends: Long = 0
+        var num_monsterkill: Long = 0
+        var num_teleport: Long = 0
+        
+        for (i <- (1 to rows.length)) {
+            accumulateInWindow3(rows, i, 5, 6, 7, )
+            
+            
+            
+        } 
+        
+        for ((row, i) <- rows.view.zipWithIndex) {
+            tm = tuple(0)
+            sum_res_received += (tuple(5) + tuple(6))
+            sum_res_waste    += (tuple(8) + tuple(9) + tuple(10))
+            sum_res_spent    += (tuple(11) + tuple(12) + tuple(13))
+            sum_won_defends  += tuple(15)
+            sum_lost_defends += tuple(17)
+            num_monsterkill  += tuple(19)
+            num_teleport     += tuple(22)
+        }
+        
+        var res_received = sum_res_received.toInt
+        val res_waste_frac = (100*sum_res_waste).toFloat / sum_res_received
+        val res_spent_frac = (100*sum_res_spent).toFloat / sum_res_received
+        val teleport = num_teleport.toInt
+        val defends = (sum_won_defends + sum_lost_defends).toInt
+        val defend_winrate = (100*sum_won_defends).toFloat / defends
+        var monsterkill = num_monsterkill.toInt
+        
+        (res_received,
+         res_waste_frac,
+         res_spent_frac,
+         teleport,
+         defends,   
+         defend_winrate,  
+         monsterkill)
+    }
+    
+    def accumulateInWindow(rows:ListBuffer[Array[Long]], rowIndex:Int, featureIndex:Int, toTime:Long):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += row(featureIndex)
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+
+    def accumulateInWindow2(rows:ListBuffer[Array[Long]], rowIndex:Int, featureIndex1:Int, featureIndex2:Int, toTime:Long):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += (row(featureIndex1) + row(featureIndex2))
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+
+    def accumulateInWindow3(rows:ListBuffer[Array[Long]], rowIndex:Int, featureIndex1:Int, featureIndex2:Int, featureIndex3:Int, toTime:Long):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += (row(featureIndex1) + row(featureIndex2) + row(featureIndex3))
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+}
+
+----------------------------------------------------------------------
+
+import scala.collection.mutable.ListBuffer
+
+object Program {
+
+    def main(args: Array[String]): Unit = {
+        val DAY_TS = 86400000L
+        val START_DAY = 1543104000000L
+
+        var rows = new ListBuffer[Array[Long]]
+        rows += Array[Long](START_DAY, 101, 1, 1)
+        rows += Array[Long](START_DAY + 1*DAY_TS,  202, 2, -1)
+        rows += Array[Long](START_DAY + 2*DAY_TS,  303, 3, 2)
+        rows += Array[Long](START_DAY + 10*DAY_TS, 404, 4, -3)
+        rows = rows.sortBy(r => r(0))
+
+        val result1 = accumulateInWindow(rows, 1, 0, 10)
+        val result2 = accumulateInWindow2(rows, 1, 2, 1, 3)
+        val result3 = accumulateInWindow3(rows, 1, 2, 3, 2, 1000)
+
+        println(result1)
+        println(result2)
+        println(result3)
+    }
+
+    def accumulateInWindow(rows:ListBuffer[Array[Long]], featureIndex:Int, rowIndex:Int, toDays:Int):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        val toTime = row(0) + toDays*86400000L
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += row(featureIndex)
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+
+    def accumulateInWindow2(rows:ListBuffer[Array[Long]], featureIndex1:Int, featureIndex2:Int, rowIndex:Int, toDays:Int):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        val toTime = row(0) + toDays*86400000L
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += (row(featureIndex1) + row(featureIndex2))
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+
+    def accumulateInWindow3(rows:ListBuffer[Array[Long]], featureIndex1:Int, featureIndex2:Int, featureIndex3:Int, rowIndex:Int, toDays:Int):Long = {
+        val length = rows.length
+        var currentIndex = rowIndex
+        var row = rows(currentIndex)
+        val toTime = row(0) + toDays*86400000L
+        var currentTime = row(0)
+        var result: Long = 0
+
+        while ((currentTime <= toTime) && (currentIndex < length)) {
+            result += (row(featureIndex1) + row(featureIndex2) + row(featureIndex3))
+            currentIndex += 1
+
+            if (currentIndex < length) {
+                row = rows(currentIndex)
+                currentTime = row(0)
+            }
+        }
+
+        result
+    }
+}
