@@ -65,3 +65,6 @@ https://it-events.com/system/attachments/files/000/001/362/original/kiselev_shul
 
 
 https://habr.com/company/econtenta/blog/303458/ - ранжирование
+
+Интересная модификация KNN - Learned Metric NN
+https://github.com/mmp-practicum-team/mmp_practicum_fall_2018/blob/master/reports/fedor_lebed_lmnn.pdf
