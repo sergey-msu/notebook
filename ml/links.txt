@@ -68,3 +68,6 @@ https://habr.com/company/econtenta/blog/303458/ - ранжирование
 
 Интересная модификация KNN - Learned Metric NN
 https://github.com/mmp-practicum-team/mmp_practicum_fall_2018/blob/master/reports/fedor_lebed_lmnn.pdf
+
+1D Convolutions explained
+https://blog.goodaudience.com/introduction-to-1d-convolutional-neural-networks-in-keras-for-time-sequences-3a7ff801a2cf
