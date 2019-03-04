@@ -71,3 +71,11 @@ https://github.com/mmp-practicum-team/mmp_practicum_fall_2018/blob/master/report
 
 1D Convolutions explained
 https://blog.goodaudience.com/introduction-to-1d-convolutional-neural-networks-in-keras-for-time-sequences-3a7ff801a2cf
+
+
+Bayesian:
+
+AB testing
+https://cdn2.hubspot.net/hubfs/310840/VWO_SmartStats_technical_whitepaper.pdf
+
+Bayesian for hackers - book in my repo
