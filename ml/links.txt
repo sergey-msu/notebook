@@ -75,7 +75,7 @@ https://blog.goodaudience.com/introduction-to-1d-convolutional-neural-networks-i
 
 Bayesian:
 
-AB testing
+AB testing and Bayesian concept well-explained
 https://cdn2.hubspot.net/hubfs/310840/VWO_SmartStats_technical_whitepaper.pdf
 
 Bayesian for hackers - book in my repo
