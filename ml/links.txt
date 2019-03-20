@@ -79,3 +79,6 @@ AB testing and Bayesian concept well-explained
 https://cdn2.hubspot.net/hubfs/310840/VWO_SmartStats_technical_whitepaper.pdf
 
 Bayesian for hackers - book in my repo
+
+About PyMC3 (and also Edward, Stan, TF Probability)
+https://notamonadtutorial.com/inteview-with-thomas-wiecki-about-probabilistic-programming-and-pymc-66a12b6f3f2e
