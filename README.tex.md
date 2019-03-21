@@ -1,4 +1,4 @@
 # notebook
 Different notes
 
-\[\int f(x)dx = F(x) + C\]
+$\int f(x)dx = F(x) + C$
