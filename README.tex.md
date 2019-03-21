@@ -1,3 +1,6 @@
+\begin{document}
+
+
 # notebook
 Different notes
 
@@ -13,3 +16,6 @@ we define
 \begin{align}\tag{$\dagger$}
    F(x) = \int^x_a f(t)dt 
 \end{align}
+
+
+\end{document}
