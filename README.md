@@ -1,4 +1,4 @@
 # notebook
 Different notes
 
-$dream$
+**Theorem**: The translation $[\![e]\!]$ given by
