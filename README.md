@@ -13,3 +13,7 @@ SE = \frac{\sigma}{\sqrt{n}}
 
 
 ![](https://latex.codecogs.com/svg.latex?y%3Dx%5E2)
+
+- <img src="https://latex.codecogs.com/gif.latex?s=\text { sensor reading }  " /> 
+
+<img src="https://latex.codecogs.com/gif.latex?s=\text { sensor reading }  " /> 
