@@ -10,3 +10,6 @@ SE = \frac{\sigma}{\sqrt{n}}
 - <img src="https://latex.codecogs.com/svg.latex?\int&space;f(x)dx=F(x)&plus;C" /> 
 
 ![](https://latex.codecogs.com/svg.latex?\int&space;f(x)dx=F(x)&plus;C)
+
+
+![](https://latex.codecogs.com/svg.latex?y%3Dx%5E2)
