@@ -14,7 +14,7 @@ SE = \frac{\sigma}{\sqrt{n}}
 
 4
 ![](https://latex.codecogs.com/svg.latex?\int&space;f(x)dx=F(x)&plus;C)
-[//]: <> (This is also a comment.)
+[//]: # "Comment"
 
 5
 ![](https://latex.codecogs.com/svg.latex?y%3Dx%5E2)
