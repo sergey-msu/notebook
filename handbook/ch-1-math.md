@@ -3,7 +3,7 @@
 
 #### 1.1 Случайная величина
 
-Случайной величиной называется любая измеримая функция ![](https://latex.codecogs.com/svg.latex?X), определенная на некотором пространстве элементарных исходов ![](https://latex.codecogs.com/svg.latex?\Omega), со значениями в произвольном множестве ![](https://latex.codecogs.com/svg.latex?M). Чаще всего значения сл.в. - вещественные числа ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}) или вектора ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}^n). Более того, в большинстве случаев, само пространство элементарных исходов уже смоделировано как подмножество ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}^n)
+Случайной величиной называется любая измеримая функция ![](https://latex.codecogs.com/svg.latex?X) со значениями в произвольном множестве ![](https://latex.codecogs.com/svg.latex?M), определенная на некотором пространстве элементарных исходов ![](https://latex.codecogs.com/svg.latex?\Omega). В ML в большинстве случаев задача уже смоделирована таким образом, что пространство элементарных исходов является подмножеством ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}^n), а значения сл.в. - вещественные числа ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}) или вектора ![](https://latex.codecogs.com/svg.latex?\\mathbb{R}^n).
 
 ![](https://latex.codecogs.com/svg.latex?X:&space;\Omega\rightarrow\mathbb{R}^n)
 <!-- X: \Omega\rightarrow\mathbb{R}^n -->
