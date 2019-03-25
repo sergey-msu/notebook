@@ -21,7 +21,9 @@
 
 Если множество значений RV не дискретно, то RV может быть описана своей функцией распределения (CDF, Cumulative Distribution Function): ![](https://latex.codecogs.com/svg.latex?F(x)=P(X<x))
 
-В DS в большинстве случаев CDF дифференцируемо. Производная от CDF называется плотностью распределения случайной величины: ![](https://latex.codecogs.com/svg.latex?f(x)=F'(x)). Таким образом, по определению ![](https://latex.codecogs.com/svg.latex?P(a<X<b)=\int_{a}^{b}f(x)dx)
+В DS в большинстве случаев CDF дифференцируемо. Производная от CDF называется плотностью распределения случайной величины: ![](https://latex.codecogs.com/svg.latex?f(x)=F'(x)). Таким образом, по определению 
+
+![](https://latex.codecogs.com/svg.latex?P(a<X<b)=\int_{a}^{b}f(x)dx)
 
 #### 1.2 Выборка
 
