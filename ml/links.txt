@@ -82,3 +82,9 @@ Bayesian for hackers - book in my repo
 
 About PyMC3 (and also Edward, Stan, TF Probability)
 https://notamonadtutorial.com/inteview-with-thomas-wiecki-about-probabilistic-programming-and-pymc-66a12b6f3f2e
+
+Bayesian TrueSkill:
+    https://habr.com/ru/company/yandex/blog/263991/
+    http://kpei.me/blog/?p=999
+    
+
