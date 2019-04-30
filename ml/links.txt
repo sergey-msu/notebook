@@ -86,5 +86,5 @@ https://notamonadtutorial.com/inteview-with-thomas-wiecki-about-probabilistic-pr
 Bayesian TrueSkill:
     https://habr.com/ru/company/yandex/blog/263991/
     http://kpei.me/blog/?p=999
-    
+    http://papers.nips.cc/paper/3079-trueskilltm-a-bayesian-skill-rating-system.pdf  - MS Research paper
 
