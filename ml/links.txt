@@ -92,3 +92,6 @@ Bayesian TrueSkill:
     http://kpei.me/blog/?p=999
     http://papers.nips.cc/paper/3079-trueskilltm-a-bayesian-skill-rating-system.pdf  - MS Research paper
 
+
+AIRFLOW
+https://www.astronomer.io/guides/airflow-executors-explained/
